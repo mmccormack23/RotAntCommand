@@ -1,0 +1,87 @@
+//Contrastingly to program _5-10-17Test, this program is entry based.
+//User enters a command, computer determines the action described by the command and does it.
+// Pin settings:
+const int pls_pos = 2;
+const int dir_pos = 4;
+const int pls_neg = 3;
+const int dir_neg = 5;
+
+// System variables
+boolean stringComplete = false;  // whether the string is complete
+char inputString[10];  // a string to hold incoming data, 8 bits
+int iCharacterNumber = 0;
+int ASCIIvalue;
+
+void setup() {
+  // initialize serial:
+  pinMode(2, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  Serial.begin(250000);
+}
+
+void loop() {
+  // a string to hold incoming data, 11 bits of data (10 apart from newline character)
+  char inputString[10] = {};
+  // print the string when a newline arrives:
+  // switch (ASCIIvalue){
+  if (stringComplete==true) {
+    Serial.println(inputString);
+    //int inputValue=inputString[0]*1;
+    //Serial.println(inputValue);
+    //switch (inputValue){
+    //case 72:{ (R)
+    if (inputString[0] == 'R') {
+      Serial.println("Reset instruction received. ");
+    } //close case 72
+    //break;
+    //case 82: { (R)
+    else if (inputString[0] == 'H') {
+      Serial.println("Home instruction received. ");
+    } //close case 82
+    //break;
+    //case 83: { (S)
+    else if (inputString[0] == 'S') {
+      Serial.println("Stop instruction received. ");
+      analogWrite(2, 0);
+      analogWrite(4, 0);
+      analogWrite(3, 0);
+      analogWrite(5, 0);
+    } //close case 83
+    //break;
+    //default: {}
+    //} Close switch function
+    else {}
+    //Clear the string
+    Serial.println("Clearing the string");
+    inputString[0] = '\0';
+    stringComplete = false;
+  } // End 'if stringComplete'
+} // End 'loop()'
+
+void serialEvent() {
+  int inChar;
+  Serial.println("serialEvent call");
+  //while (Serial.available()){
+  // get the new byte:
+  inChar = (char)Serial.read(); //'\n', inputString, sizeof(inputString) - 1);
+  //add to input string
+  for (iCharacterNumber=0;iCharacterNumber<=10;iCharacterNumber++){
+    inputString[iCharacterNumber] = inChar;  //string to hold incoming data
+    //iCharacterNumber++;
+    Serial.print("Character received, string now = : ");
+    Serial.println(inputString);
+    ASCIIvalue = Serial.println(inChar, DEC);
+  }
+  //Serial.print("Character is array value: ");
+  //Serial.println(iCharacterNumber);
+  inputString[inChar] = '\0';
+  //Serial.print("Inputted data, from the void serialEvent() part of the program: ");
+  //Serial.println(inputString);
+  if (inputString[0] = '\n') {
+    iCharacterNumber = 0;
+    stringComplete = true; //
+  } //End if(inputString)
+} //End while
+// End serialEvent
